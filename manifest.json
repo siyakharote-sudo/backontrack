@@ -1,0 +1,19 @@
+{
+  "name": "Back on Track",
+  "short_name": "BackOnTrack",
+  "description": "Syllabus → Roadmap → Streak. Daily checkpoints and doubt solving.",
+  "start_url": "./index.html#today",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071225",
+  "theme_color": "#071225",
+  "icons": [
+    {
+      "src": "./dark.482877c0dbdc1db6f1d5.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

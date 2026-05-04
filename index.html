@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#071225" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Back on Track — organize your syllabus, build a roadmap, keep your streak, and get daily reminders." />
+
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./dark.482877c0dbdc1db6f1d5.png" />
+    <link rel="stylesheet" href="./styles.css" />
+
+    <title>Back on Track</title>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true"></div>
+        <div class="brand__text">
+          <div class="brand__name">Back on Track</div>
+          <div class="brand__tag">Syllabus → Roadmap → Streak</div>
+        </div>
+      </div>
+
+      <div class="topbar__actions">
+        <button id="installBtn" class="btn btn--ghost" type="button" hidden>
+          Install
+        </button>
+        <button id="notifyBtn" class="btn btn--ghost" type="button" title="Enable reminders">
+          Remind me
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="app" tabindex="-1">
+      <section class="grid">
+        <aside class="panel panel--left" aria-label="Overview">
+          <div class="card card--hero">
+            <div class="hero">
+              <div>
+                <div class="kicker">Today</div>
+                <h1 class="h1">Your next step, clearly.</h1>
+                <p class="muted">
+                  Upload or paste your syllabus once. We’ll break it into subjects, generate checkpoints, and keep you consistent with
+                  daily tasks + streaks.
+                </p>
+              </div>
+              <div class="hero__stats" role="list">
+                <div class="stat" role="listitem">
+                  <div class="stat__label">Streak</div>
+                  <div class="stat__value"><span id="streakNow">0</span><span class="stat__unit">days</span></div>
+                </div>
+                <div class="stat" role="listitem">
+                  <div class="stat__label">Best</div>
+                  <div class="stat__value"><span id="streakBest">0</span><span class="stat__unit">days</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head">
+              <h2 class="h2">Quick actions</h2>
+            </div>
+            <div class="stack">
+              <button class="btn btn--primary" type="button" data-nav="syllabus">Add syllabus</button>
+              <button class="btn" type="button" data-nav="roadmap">Generate roadmap</button>
+              <button class="btn" type="button" data-nav="today">Plan my day</button>
+              <button class="btn" type="button" data-nav="doubts">Solve a doubt</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head">
+              <h2 class="h2">Reminder</h2>
+            </div>
+            <div class="row">
+              <label class="field">
+                <span class="field__label">Daily reminder time</span>
+                <input id="reminderTime" class="input" type="time" />
+              </label>
+              <button id="saveReminderBtn" class="btn" type="button">Save</button>
+            </div>
+            <div class="muted small" id="reminderHint">Reminders work best after installing the app.</div>
+          </div>
+        </aside>
+
+        <section class="panel panel--main" aria-label="Workspace">
+          <div class="tabs" role="tablist" aria-label="Sections">
+            <button class="tab" role="tab" aria-selected="true" data-tab="today">Today</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="syllabus">Syllabus</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="roadmap">Roadmap</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="doubts">Doubts</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="settings">Settings</button>
+          </div>
+
+          <div id="banner" class="banner" role="status" aria-live="polite" hidden></div>
+
+          <section class="view" data-view="today">
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Today’s tasks</h2>
+                <div class="card__meta">
+                  <span class="pill" id="todayDatePill">—</span>
+                  <button id="regenTodayBtn" class="btn btn--ghost" type="button">Rebuild</button>
+                </div>
+              </div>
+
+              <div id="todayEmpty" class="empty" hidden>
+                <div class="empty__title">No tasks yet</div>
+                <div class="empty__text">Add your syllabus, generate a roadmap, and we’ll queue your daily tasks automatically.</div>
+                <button class="btn btn--primary" type="button" data-nav="syllabus">Add syllabus</button>
+              </div>
+
+              <div id="todayList" class="list" aria-label="Task list"></div>
+              <div class="row row--space">
+                <div class="muted small" id="todayProgress">—</div>
+                <button id="markDayDoneBtn" class="btn btn--primary" type="button">Mark day done</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">What to do when teachers fail you</h2>
+              </div>
+              <div class="tips">
+                <div class="tip">
+                  <div class="tip__title">Make tiny wins</div>
+                  <div class="tip__text">Finish one checkpoint today. Momentum beats motivation.</div>
+                </div>
+                <div class="tip">
+                  <div class="tip__title">Prioritize scoring units</div>
+                  <div class="tip__text">Past papers + predictable units first. Perfection later.</div>
+                </div>
+                <div class="tip">
+                  <div class="tip__title">Ask better doubts</div>
+                  <div class="tip__text">Paste the question, your attempt, and where you’re stuck.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="view" data-view="syllabus" hidden>
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Upload / paste syllabus</h2>
+                <div class="card__meta">
+                  <button id="clearSyllabusBtn" class="btn btn--ghost" type="button">Clear</button>
+                </div>
+              </div>
+              <div class="row">
+                <label class="field">
+                  <span class="field__label">Upload .txt syllabus (optional)</span>
+                  <input id="syllabusFile" class="input" type="file" accept=".txt,text/plain" />
+                </label>
+              </div>
+              <label class="field">
+                <span class="field__label">Or paste syllabus text</span>
+                <textarea id="syllabusText" class="textarea" rows="10" placeholder="Example:\nSUBJECT: Engineering Mathematics\n- Unit 1: Matrices\n- Unit 2: Differential Calculus\n\nSUBJECT: Data Structures\n- Arrays, Linked Lists\n- Stacks & Queues"></textarea>
+              </label>
+              <div class="row row--space">
+                <button id="parseSyllabusBtn" class="btn btn--primary" type="button">Organize by subject</button>
+                <button id="addSubjectBtn" class="btn" type="button">Add subject manually</button>
+              </div>
+              <div class="muted small">
+                Tip: Use headings like “SUBJECT:” or lines like “Subject - …”. Bullets become units/topics automatically.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Subjects</h2>
+                <div class="card__meta">
+                  <span class="pill" id="subjectCountPill">0</span>
+                </div>
+              </div>
+              <div id="subjectsWrap" class="subjects"></div>
+            </div>
+          </section>
+
+          <section class="view" data-view="roadmap" hidden>
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Personalized roadmap</h2>
+                <div class="card__meta">
+                  <button id="exportBtn" class="btn btn--ghost" type="button">Export</button>
+                  <button id="importBtn" class="btn btn--ghost" type="button">Import</button>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="field">
+                  <span class="field__label">Target date (optional)</span>
+                  <input id="targetDate" class="input" type="date" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Daily checkpoints</span>
+                  <input id="dailyCount" class="input" type="number" min="1" max="10" value="3" />
+                </label>
+              </div>
+
+              <div class="row row--space">
+                <button id="generateRoadmapBtn" class="btn btn--primary" type="button">Generate checkpoints</button>
+                <button id="resetProgressBtn" class="btn" type="button">Reset progress</button>
+              </div>
+
+              <div class="muted small">
+                Checkpoints are bite-sized. Completing them feeds your daily tasks and streak automatically.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Checkpoints</h2>
+                <div class="card__meta">
+                  <span class="pill" id="checkpointPill">0 / 0</span>
+                </div>
+              </div>
+              <div id="checkpointsWrap" class="list" aria-label="Checkpoint list"></div>
+            </div>
+          </section>
+
+          <section class="view" data-view="doubts" hidden>
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Doubt Solver</h2>
+                <div class="card__meta">
+                  <span class="pill pill--accent">AI (local)</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="field">
+                  <span class="field__label">Subject (optional)</span>
+                  <input id="doubtSubject" class="input" type="text" placeholder="e.g., DSA / Signals / Math" />
+                </label>
+              </div>
+              <label class="field">
+                <span class="field__label">Your doubt</span>
+                <textarea id="doubtText" class="textarea" rows="6" placeholder="Paste the question + your attempt + where you got stuck."></textarea>
+              </label>
+              <div class="row row--space">
+                <button id="solveBtn" class="btn btn--primary" type="button">Solve</button>
+                <button id="copyPromptBtn" class="btn" type="button">Copy prompt</button>
+              </div>
+
+              <div id="aiNotice" class="notice">
+                <div class="notice__title">Uses local AI proxy</div>
+                <div class="notice__text">
+                  This uses a local backend proxy to call Anthropic securely (no browser CORS issues, no API key in the frontend). If the
+                  proxy isn’t running, it falls back to offline help.
+                </div>
+              </div>
+
+              <div id="doubtAnswer" class="answer" hidden></div>
+            </div>
+          </section>
+
+          <section class="view" data-view="settings" hidden>
+            <div class="card">
+              <div class="card__head">
+                <h2 class="h2">Settings</h2>
+              </div>
+
+              <div class="row">
+                <label class="field">
+                  <span class="field__label">Your name</span>
+                  <input id="nameInput" class="input" type="text" placeholder="e.g., Ananya" />
+                </label>
+                <label class="field">
+                  <span class="field__label">College / Branch (optional)</span>
+                  <input id="branchInput" class="input" type="text" placeholder="e.g., CSE, 3rd year" />
+                </label>
+              </div>
+
+              <div class="divider"></div>
+              <div class="muted small">
+                Note: The Doubt Solver works offline and does not require any API keys.
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="row row--space">
+                <button id="saveSettingsBtn" class="btn btn--primary" type="button">Save settings</button>
+                <button id="wipeAllBtn" class="btn btn--danger" type="button">Wipe all data</button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottomnav" aria-label="Primary">
+      <button class="navbtn" type="button" data-nav="today" aria-current="page">
+        <span class="navbtn__icon" aria-hidden="true">✓</span>
+        <span class="navbtn__label">Today</span>
+      </button>
+      <button class="navbtn" type="button" data-nav="syllabus">
+        <span class="navbtn__icon" aria-hidden="true">≡</span>
+        <span class="navbtn__label">Syllabus</span>
+      </button>
+      <button class="navbtn" type="button" data-nav="roadmap">
+        <span class="navbtn__icon" aria-hidden="true">⟡</span>
+        <span class="navbtn__label">Roadmap</span>
+      </button>
+      <button class="navbtn" type="button" data-nav="doubts">
+        <span class="navbtn__icon" aria-hidden="true">?</span>
+        <span class="navbtn__label">Doubts</span>
+      </button>
+      <button class="navbtn" type="button" data-nav="settings">
+        <span class="navbtn__icon" aria-hidden="true">⚙</span>
+        <span class="navbtn__label">Settings</span>
+      </button>
+    </nav>
+
+    <input id="importFile" type="file" accept="application/json" hidden />
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
